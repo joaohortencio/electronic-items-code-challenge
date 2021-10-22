@@ -1,5 +1,5 @@
 <?php
-namespace src\Electronics;
+namespace App\Electronics;
 
 class ElectronicItems
 {
@@ -52,15 +52,17 @@ class ElectronicItems
                 throw new \Exception("Invalid sort order: {$sort_order}");
         }
 
-        $sorted = array();
-        foreach ($this->items as $item)
+        /**
+         * I've changed this sorting method because there was a logic error, if it has electronics with the same price,
+         * it will be replaced on the sorted array, because it was using $sorted[$item->price*100]
+         */
+        $price = array();
+        foreach ($this->items as $key=>$item)
         {
-            $sorted[($item->price * 100)] = $item;
+            $price[$key] = $item->price;
         }
-
-        ($sort_order == SORT_DESC) ? ksort($sorted, $type) : krsort($sorted, $type);
-
-        return $sorted;
+        array_multisort($price, $sort_order, $type, $this->items);
+        return $this->items;
     }
     /**
      *

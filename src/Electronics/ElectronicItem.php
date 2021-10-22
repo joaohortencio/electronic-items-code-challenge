@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Electronics;
+namespace App\Electronics;
 
 abstract class ElectronicItem
 {
@@ -16,9 +16,6 @@ abstract class ElectronicItem
      * @var bool
      */
     public $wired;
-    /**
-     * @var array
-     */
     private $extras;
 
     const ELECTRONIC_ITEM_TELEVISION = 'television';
@@ -89,7 +86,7 @@ abstract class ElectronicItem
          * If maxExtras() return < 0, it means there's no limit of extras, if it is >=0, checks if it already passed the limit
          * in a confirmed case of count() > maxExtras() throw exception.
          */
-        if ($this->maxExtras() >= 0 && count($extras->getSortedItems('')) > $this->maxExtras()) {
+        if ($this->maxExtras() >= 0 && count($extras->getSortedItems()) > $this->maxExtras()) {
             throw new \Exception("The electronic item of type {$this->getType()} has max limit of {$this->maxExtras()} extra items");
         }
 
@@ -98,9 +95,9 @@ abstract class ElectronicItem
 
     /**
      * Return an array containing n ElectronicItem objects
-     * @return array
+     * @return ElectronicItems
      */
-    public function getExtras():array
+    public function getExtras():ElectronicItems
     {
         return $this->extras;
     }
