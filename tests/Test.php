@@ -8,6 +8,7 @@ use App\Electronics\ElectronicItems;
 use App\Electronics\Microwave;
 use App\Electronics\ElectronicItem;
 use App\Electronics\Television;
+use App\ScenarioLoader;
 
 use PHPUnit\Framework\TestCase;
 
@@ -124,7 +125,56 @@ class Test extends TestCase
     }
 
 
+    public function testSortItems()
+    {
+        $scenario = new ScenarioLoader('src/scenarios/1.yaml');
+        $items = $scenario->load();
 
+
+        $sortedWithoutExtras = $items->getSortedItems(SORT_NUMERIC,SORT_DESC,false);
+        $sortedWithExtras = $items->getSortedItems();
+
+        $this->assertEquals(899.01, reset($sortedWithoutExtras)->getPrice() ); //check the first element
+        $this->assertEquals(399.99, end($sortedWithoutExtras)->getPrice() ); //check the last element
+        /**
+         * because the item3 is a television with a price tag of 799, plus an extra controller with a price of 350
+         * so it changed the sortItems results if you consider the prices of the extras
+         */
+        $this->assertEquals(799.0, reset($sortedWithExtras)->getPrice() ); //check the first element
+        $this->assertEquals(399.99, end($sortedWithExtras)->getPrice() ); //check the last element
+
+
+    }
+
+    public function testGetItemsByType()
+    {
+        $scenario = new ScenarioLoader('src/scenarios/1.yaml');
+        $items = $scenario->load();
+
+        $television = $items->getItemsByType(ElectronicItem::ELECTRONIC_ITEM_TELEVISION);
+        $console = $items->getItemsByType(ElectronicItem::ELECTRONIC_ITEM_CONSOLE);
+
+        $this->assertCount(2, $television);
+        $this->assertCount(1,$console );
+    }
+
+    public function testSingleElectronicTotalPrice()
+    {
+        $scenario = new ScenarioLoader('src/scenarios/1.yaml');
+        $items = $scenario->load();
+        $console = $items->getItemsByType(ElectronicItem::ELECTRONIC_ITEM_CONSOLE);
+        $microwave = $items->getItemsByType(ElectronicItem::ELECTRONIC_ITEM_MICROWAVE);
+
+        $this->assertEquals(759, reset($console)->getTotalPrice());
+        $this->assertEquals(399.99, reset($microwave)->getTotalPrice());
+    }
+
+    public function testScenarioTotalPrice(){
+        $scenario = new ScenarioLoader('src/scenarios/1.yaml');
+        $items = $scenario->load();
+
+        $this->assertEquals(3232, $items->getTotalPrice());
+    }
 
     private function createExtraElectronics($count)
     {

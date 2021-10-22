@@ -2,6 +2,8 @@
 
 namespace App\Electronics;
 
+use phpDocumentor\Reflection\Types\Boolean;
+
 abstract class ElectronicItem
 {
     /**
@@ -35,17 +37,17 @@ abstract class ElectronicItem
         return static::$types;
     }
 
-    public function getPrice()
+    public function getPrice():float
     {
         return $this->price;
     }
 
-    public function getType()
+    public function getType():string
     {
         return $this->type;
     }
 
-    public function getWired()
+    public function getWired():bool
     {
         return $this->wired;
     }
@@ -68,8 +70,11 @@ abstract class ElectronicItem
     public function getTotalPrice() : float
     {
         $totalPrice = $this->getPrice();
-        foreach ($this->extras->getSortedItems() as $extra) {
-            $totalPrice += $extra->getTotalPrice(); //calculates recursively for extras items inside an extra item.
+        if(!empty($this->extras))
+        {
+            foreach ($this->extras->getSortedItems() as $extra) {
+                $totalPrice += $extra->getTotalPrice(); //calculates recursively for extras items inside an extra item.
+            }
         }
 
         return $totalPrice;

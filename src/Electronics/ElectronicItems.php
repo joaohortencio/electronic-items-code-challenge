@@ -11,13 +11,13 @@ class ElectronicItems
     }
 
     /**
-     * Returns the items depending on the sorting type requested
+     * Returns sorted electronic items in an array, depending on the sorting type requested with or without the extras
      * @param int $type
      * @param int $sort_order
      * @return array
      * @throws \Exception
      */
-    public function getSortedItems(int $type = SORT_NUMERIC, int $sort_order = SORT_DESC) : array
+    public function getSortedItems(int $type = SORT_NUMERIC, int $sort_order = SORT_DESC, $withExtras = true) : array
     {
         /*
          * checking if sorting type is valid
@@ -59,25 +59,48 @@ class ElectronicItems
         $price = array();
         foreach ($this->items as $key=>$item)
         {
-            $price[$key] = $item->price;
+            /**
+             * if $withExtras=true, sum electronic price with the sum the price of each extra item attached
+             */
+            $price[$key] = ( $withExtras ) ? $item->getTotalPrice() : $item->price;
         }
         array_multisort($price, $sort_order, $type, $this->items);
+
         return $this->items;
     }
+
     /**
-     *
+     * Return an array containing all electronic items of the specified $type
      * @param string $type
+     * @return array
+     * @throws \Exception
      */
-    public function getItemsByType(string $type = '')
+    public function getItemsByType(string $type = ''): array
     {
         if (in_array($type, ElectronicItem::getTypes()))
         {
             $callback = function($item) use ($type)
             {
-                return $item->type == $type;
+                return $item->getType() == $type;
             };
-            $items = array_filter($this->items, $callback);
+            return array_filter($this->items, $callback); //changed to return correctly the items selected
+        } else {
+            throw new \Exception("Type '{$type}' not found.");
         }
-        return false;
+    }
+
+    /**
+     * Return total price of all Electronic Items plus its extras
+     * @return float
+     */
+    public function getTotalPrice(): float
+    {
+        $totalPrice = 0;
+        foreach ($this->items as $item)
+        {
+            $totalPrice += $item->getTotalPrice();
+        }
+
+        return $totalPrice;
     }
 }

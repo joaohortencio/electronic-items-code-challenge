@@ -6,7 +6,8 @@ use Symfony\Component\Console\Application;
 $application = new Application();
 
 $application->addCommands(array(
-    new App\RunTestsTerminalCommands()
+    new App\RunTestsTerminalCommands(),
+    new App\RunAnswersToQuestionsTerminalCommands()
 ));
 
 try {

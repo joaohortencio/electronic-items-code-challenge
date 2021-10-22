@@ -1,0 +1,22 @@
+item1:
+  type: console
+  price: 699
+  extras:
+    extra1: { type: controller, price: 20, wired: true }
+    extra2: { type: controller, price: 20, wired: true }
+    extra3: { type: controller, price: 10, wired: false }
+    extra4: { type: controller, price: 10, wired: false }
+item2:
+  type: television
+  price: 899.01
+  extras:
+    extra1: { type: controller, wired: false, price: 20 }
+    extra2: { type: controller, wired: false, price: 5 }
+item3:
+  type: television
+  price: 799.00
+  extras:
+    extra1: { type: controller, wired: false, price: 350 }
+item4:
+  type: microwave
+  price: 399.99

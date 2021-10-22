@@ -15,7 +15,6 @@ class Console extends ElectronicItem
          * define the type of the electronic item
          */
         $this->setType(parent::ELECTRONIC_ITEM_CONSOLE);
-
         $this->setPrice($price);
     }
 
